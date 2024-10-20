@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mood/pages/home_page.dart';
 import 'package:flutter_mood/pages/login_page.dart';
+import 'package:flutter_mood/pages/mood_history.dart';
+import 'package:flutter_mood/pages/note_page.dart';
 import 'package:flutter_mood/utils/routes.dart';
 
 void main(){
@@ -9,7 +11,6 @@ void main(){
 
 class MoodTracker extends StatelessWidget {
   
-
   @override
   Widget build(BuildContext context) {
      return MaterialApp(
@@ -17,18 +18,19 @@ class MoodTracker extends StatelessWidget {
       themeMode:ThemeMode.light,
       theme:ThemeData(
         primarySwatch:Colors.deepPurple,
-        
        ),
       darkTheme:ThemeData(
         brightness:Brightness.dark,
       ),
+      debugShowCheckedModeBanner: false,
       initialRoute: MyRoutes.homeRoute,
       routes: {
         "/":(context)=>LoginPage(),
         MyRoutes.homeRoute:(context)=> Homepage(),
         MyRoutes.loginRoute:(context)=>LoginPage(),
-
-    },
+        MyRoutes.NotesPage:(context)=>NotesPage(),
+        MyRoutes.moodhistoryroute:(context)=>MoodHistoryPage(moodHistory: [],)
+        },
       );
     
   }
