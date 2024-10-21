@@ -1,130 +1,69 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mood/widgets/drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'dart:convert';
 
 class MoodHistoryPage extends StatefulWidget {
+  final Map<String, List<Map<String, String>>> moodHistory;
 
-  final List<Map<String, String>> moodHistory; // Add this line
+    MoodHistoryPage({required this.moodHistory});
 
-  MoodHistoryPage({required this.moodHistory}); // Ensure this constructor accepts moodHistory
 
 
   @override
-  
   _MoodHistoryPageState createState() => _MoodHistoryPageState();
-  
 }
 
 class _MoodHistoryPageState extends State<MoodHistoryPage> {
-  List<Map<String, String>> moodHistory = [];
   final List<String> moods = ['Angry', 'Sad', 'Neutral', 'Happy', 'Calm'];
-  DateTime selectedDate = DateTime.now();
+  List<String> savedMoods = [];
 
   @override
   void initState() {
     super.initState();
-    loadMoodHistory(); // Load mood history from shared preferences
+    loadMoodHistory();
   }
 
-  // Load mood history from shared preferences
+  // Load mood history from SharedPreferences
   Future<void> loadMoodHistory() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? savedMoods = prefs.getStringList('moodHistory');
-    if (savedMoods != null) {
-      moodHistory = savedMoods.map((e) {
-        List<String> parts = e.split('::');
-        return {'mood': parts[0], 'timestamp': parts[1]};
-      }).toList();
-    }
-    setState(() {});
-  }
-
-  // Save mood history to shared preferences
-  Future<void> saveMoodHistory() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> savedMoods = moodHistory.map((e) {
-      return '${e['mood']}::${e['timestamp']}';
-    }).toList();
-    await prefs.setStringList('moodHistory', savedMoods);
-  }
-
-  void addMood(String mood) {
-    final timestamp = DateTime.now().toString();
-    moodHistory.add({'mood': mood, 'timestamp': timestamp});
-    saveMoodHistory(); // Save mood after adding
-    setState(() {});
-  }
-
-  void resetMoodHistory() {
-    moodHistory.clear();
-    saveMoodHistory(); // Save the empty list
-    setState(() {});
-  }
-
-  void analyzeMoods() {
-    Map<String, int> moodCount = {};
-    for (var moodEntry in moodHistory) {
-      String mood = moodEntry['mood']!;
-      moodCount[mood] = (moodCount[mood] ?? 0) + 1;
-    }
-
-    // Show analysis (for example, in a dialog)
-    String analysis = moodCount.entries.map((entry) {
-      return '${entry.key}: ${entry.value} times';
-    }).join('\n');
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Mood Analysis for ${selectedDate.toLocal().toString().split(' ')[0]}'),
-          content: Text(analysis.isNotEmpty ? analysis : 'No moods recorded.'),
-          actions: [
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? moodHistoryString = prefs.getString('moodHistory');
+  if (moodHistoryString != null) {
+    Map<String, dynamic> decodedMoodHistory = jsonDecode(moodHistoryString);
+    setState(() {
+      savedMoods = [];
+      decodedMoodHistory.forEach((key, value) {
+        for (var moodEntry in value) {
+          savedMoods.add('${moodEntry['mood']} at $key');
+        }
       });
-      // Load mood history for the selected date (if implemented)
-      // loadMoodHistoryForDate(selectedDate);
+    });
+  }
+}
+
+  // Get mood counts for visualization
+  Map<String, int> getMoodCounts() {
+    Map<String, int> moodCounts = {};
+    for (var moodEntry in savedMoods) {
+      String mood = moodEntry.split(' at ')[0]; // Extract mood
+      moodCounts[mood] = (moodCounts[mood] ?? 0) + 1; // Count occurrences
     }
+    return moodCounts;
   }
 
   @override
   Widget build(BuildContext context) {
-    // Prepare data for the bar chart
-    Map<String, int> moodCount = {};
-    for (var moodEntry in moodHistory) {
-      String mood = moodEntry['mood']!;
-      moodCount[mood] = (moodCount[mood] ?? 0) + 1;
-    }
+    Map<String, int> moodCounts = getMoodCounts();
 
-    List<BarChartGroupData> barGroups = moodCount.entries.map((entry) {
+    // Prepare the Bar Chart data
+    List<BarChartGroupData> barGroups = moods.map((mood) {
       return BarChartGroupData(
-        x: moods.indexOf(entry.key), // Mood index
+        x: moods.indexOf(mood),
         barRods: [
           BarChartRodData(
-            toY: entry.value.toDouble(), // Count of each mood
-            color: Colors.deepPurple, // Bar color
+            toY: moodCounts[mood]?.toDouble() ?? 0, // Use 0 if no data
+            color: Colors.blueAccent,
           ),
         ],
       );
@@ -133,63 +72,45 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mood History'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.analytics),
-            onPressed: analyzeMoods, // Show mood analysis
+      ),
+      body: Column(
+        children: [
+          Text('Mood Distribution', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Expanded(
+            child: BarChart(
+              BarChartData(
+                barGroups: barGroups,
+                titlesData: FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: true),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 38,
+                      getTitlesWidget: (value, meta) {
+                        return Text(moods[value.toInt()]);
+                      },
+                    ),
+                  ),
+                ),
+                borderData: FlBorderData(show: true),
+                gridData: FlGridData(show: true),
+              ),
+            ),
           ),
-          IconButton(
-            icon: Icon(Icons.date_range),
-            onPressed: () => selectDate(context), // Open date picker
-          ),
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: resetMoodHistory, // Reset mood history
+          Expanded(
+            child: ListView.builder(
+              itemCount: savedMoods.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(savedMoods[index]),
+                );
+              },
+            ),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: BarChart(
-                BarChartData(
-                  barGroups: barGroups,
-                  titlesData: FlTitlesData(
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                      ),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 38,
-                        getTitlesWidget: (value, meta) {
-                          return Text(moods[value.toInt()]);
-                        },
-                      ),
-                    ),
-                  ),
-                  barTouchData: BarTouchData(
-                    enabled: false,
-                  ),
-                  gridData: FlGridData(show: true),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border.all(color: Colors.grey, width: 1),
-                  ),
-                ),
-              ),
-            ),
-           
-            
-          ],
-        ),
-      ),
-      drawer: DrawerPage(),
     );
   }
 }

@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mood/pages/mood_history.dart';
 import 'package:flutter_mood/widgets/drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+
 
 void main() {
   runApp(MaterialApp(home: Homepage()));
 }
 
 class Homepage extends StatefulWidget {
+  
   @override
+
+   
   _HomepageState createState() => _HomepageState();
+   
 }
 
 class _HomepageState extends State<Homepage> {
@@ -16,6 +23,8 @@ class _HomepageState extends State<Homepage> {
   String selectedEmoji = '';
   Color selectedColor = Colors.white; // Default background color
   Map<String, List<Map<String, String>>> moodHistory = {}; // Map to store mood history by date
+ // Map to store mood history by date
+// Map to store mood history by date
 
   final List<Map<String, dynamic>> moods = [
     {'mood': 'Angry', 'emoji': '😠', 'color': Colors.pinkAccent.shade100},
@@ -25,7 +34,7 @@ class _HomepageState extends State<Homepage> {
     {'mood': 'Calm', 'emoji': '😌', 'color': Colors.greenAccent.shade100},
   ];
 
-  void recordMood(String mood, String emoji) {
+  void recordMood(String mood, String emoji) async {
     String today = DateTime.now().toLocal().toString().split(' ')[0]; // Get today's date
     if (!moodHistory.containsKey(today)) {
       moodHistory[today] = []; // Initialize list for today if it doesn't exist
@@ -34,7 +43,10 @@ class _HomepageState extends State<Homepage> {
       'mood': mood,
       'emoji': emoji,
     });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('moodHistory', jsonEncode(moodHistory));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +92,13 @@ class _HomepageState extends State<Homepage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MoodHistoryPage(moodHistory:[],), // Ensure the type matches here
+                    builder: (context) => MoodHistoryPage(moodHistory:moodHistory,), // Ensure the type matches here
                   ),
                 );
               },
               child: Text('View Mood History'),
             ),
+            
           ],
         ),
       ),
@@ -100,7 +113,7 @@ class _HomepageState extends State<Homepage> {
         return Dialog(
           backgroundColor: selectedColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
+            borderRadius: BorderRadius.circular(4),
           ),
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -183,3 +196,7 @@ class MoodPainter extends CustomPainter {
     return true;
   }
 }
+
+
+
+

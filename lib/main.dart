@@ -10,6 +10,9 @@ void main(){
 }
 
 class MoodTracker extends StatelessWidget {
+  Map<String, List<Map<String, String>>> moodHistory = {}; 
+  
+
   
   @override
   Widget build(BuildContext context) {
@@ -29,10 +32,9 @@ class MoodTracker extends StatelessWidget {
         MyRoutes.homeRoute:(context)=> Homepage(),
         MyRoutes.loginRoute:(context)=>LoginPage(),
         MyRoutes.NotesPage:(context)=>NotesPage(),
-        MyRoutes.moodhistoryroute:(context)=>MoodHistoryPage(moodHistory: [],)
+        MyRoutes.moodhistoryroute:(context)=>MoodHistoryPage(moodHistory: moodHistory),
         },
       );
     
   }
 }
-
