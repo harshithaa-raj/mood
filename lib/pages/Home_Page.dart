@@ -4,28 +4,48 @@ import 'package:flutter_mood/widgets/drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-
 void main() {
   runApp(MaterialApp(home: Homepage()));
 }
 
 class Homepage extends StatefulWidget {
-  
   @override
-
-   
   _HomepageState createState() => _HomepageState();
-   
 }
 
+
+
+
 class _HomepageState extends State<Homepage> {
+  Map<String, List<Map<String, String>>> moodHistory = {};
+
+  @override
+  void initState() {
+    super.initState();
+    loadMoodHistory(); // Load the mood history when the app starts
+  }
+
+  Future<void> loadMoodHistory() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? moodHistoryString = prefs.getString('moodHistory');
+    
+    if (moodHistoryString != null) {
+      setState(() {
+        // Decode the saved JSON string and cast it into the proper type
+        moodHistory = (jsonDecode(moodHistoryString) as Map<String, dynamic>).map((key, value) {
+          return MapEntry(key, List<Map<String, String>>.from(value));
+        });
+      });
+    }
+  }
+
+
+
+
   String selectedMood = '';
   String selectedEmoji = '';
   Color selectedColor = Colors.white; // Default background color
-  Map<String, List<Map<String, String>>> moodHistory = {}; // Map to store mood history by date
- // Map to store mood history by date
-// Map to store mood history by date
-
+  
   final List<Map<String, dynamic>> moods = [
     {'mood': 'Angry', 'emoji': '😠', 'color': Colors.pinkAccent.shade100},
     {'mood': 'Sad', 'emoji': '😢', 'color': Colors.lightBlue.shade100},
@@ -33,6 +53,18 @@ class _HomepageState extends State<Homepage> {
     {'mood': 'Happy', 'emoji': '😊', 'color': Colors.yellow.shade300},
     {'mood': 'Calm', 'emoji': '😌', 'color': Colors.greenAccent.shade100},
   ];
+
+  // Add a list of quotes
+  final List<String> quotes = [
+    "Keep your face always toward the sunshine—and shadows will fall behind you.",
+    "The only way to do great work is to love what you do.",
+    "You are never too old to set another goal or to dream a new dream.",
+  ];
+
+  String get randomQuote {
+    final randomIndex = DateTime.now().millisecondsSinceEpoch % quotes.length;
+    return quotes[randomIndex];
+  }
 
   void recordMood(String mood, String emoji) async {
     String today = DateTime.now().toLocal().toString().split(' ')[0]; // Get today's date
@@ -43,9 +75,37 @@ class _HomepageState extends State<Homepage> {
       'mood': mood,
       'emoji': emoji,
     });
+
+    // Call addNewMood to ensure the moodHistory is updated correctly
+     // Add this line
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('moodHistory', jsonEncode(moodHistory));
   }
+
+  void addNewMood(String mood) {
+  String today = DateTime.now().toLocal().toString().split(' ')[0];
+  if (!moodHistory.containsKey(today)) {
+    moodHistory[today] = [];
+  }
+  moodHistory[today]!.add({'mood': mood, 'emoji': selectedEmoji});
+  saveMoodHistory();
+}
+
+void saveMoodHistory() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('moodHistory', jsonEncode(moodHistory));
+}
+
+void navigateToMoodHistory() {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => MoodHistoryPage(moodHistory: moodHistory), // Pass the updated moodHistory
+    ),
+  );
+}
+
 
 
   @override
@@ -53,53 +113,77 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('Mood Tracker')),
+        backgroundColor: Colors.deepPurple,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'How are you feeling today?',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepPurple, Colors.pinkAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'How are you feeling today?',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: moods.map((mood) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedMood = mood['mood'];
-                      selectedEmoji = mood['emoji'];
-                      selectedColor = mood['color'];
-                      recordMood(selectedMood, selectedEmoji); // Record mood
-                    });
-                    showMoodFullScreen(context);
-                  },
-                  child: CustomPaint(
-                    size: Size(120, 120),
-                    painter: MoodPainter(mood: mood),
-                  ),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to MoodHistory page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MoodHistoryPage(moodHistory:moodHistory,), // Ensure the type matches here
-                  ),
-                );
-              },
-              child: Text('View Mood History'),
-            ),
-            
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: moods.map((mood) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedMood = mood['mood'];
+                        selectedEmoji = mood['emoji'];
+                        selectedColor = mood['color'];
+                        recordMood(selectedMood, selectedEmoji); // Record mood
+                      });
+                      showMoodFullScreen(context);
+                    },
+                    child: CustomPaint(
+                      size: Size(120, 120),
+                      painter: MoodPainter(mood: mood),
+                    ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  '"${randomQuote}"',
+                  style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to MoodHistory page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MoodHistoryPage(moodHistory: moodHistory), // Ensure the type matches here
+                    ),
+                  );
+                },
+                child: Text('View Mood History'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       drawer: DrawerPage(),
@@ -196,7 +280,3 @@ class MoodPainter extends CustomPainter {
     return true;
   }
 }
-
-
-
-

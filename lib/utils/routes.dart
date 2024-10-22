@@ -6,6 +6,7 @@ class MyRoutes{
   static String moodhistoryroute="/moodhistory";
   static String NotesPage="/notepage";
   static String DrawerPage="/drawerpage";
+  static String treePageRoute = "/tree"; 
   
 
   

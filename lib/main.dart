@@ -26,13 +26,15 @@ class MoodTracker extends StatelessWidget {
         brightness:Brightness.dark,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: MyRoutes.homeRoute,
+      initialRoute: MyRoutes.loginRoute,
       routes: {
         "/":(context)=>LoginPage(),
         MyRoutes.homeRoute:(context)=> Homepage(),
         MyRoutes.loginRoute:(context)=>LoginPage(),
         MyRoutes.NotesPage:(context)=>NotesPage(),
         MyRoutes.moodhistoryroute:(context)=>MoodHistoryPage(moodHistory: moodHistory),
+       
+        
         },
       );
     

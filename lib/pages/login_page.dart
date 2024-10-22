@@ -26,11 +26,11 @@ class _LoginPageState extends State<LoginPage> {
   Color getBackgroundColor() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return const Color.fromARGB(255, 135, 201, 232); // Morning - Light Blue
+      return const Color.fromARGB(181, 222, 199, 115); // Morning - Light Blue
     } else if (hour < 17) {
-      return const Color.fromARGB(255, 246, 224, 112); // Afternoon - Orange
+      return const Color.fromARGB(255, 234, 123, 68); // Afternoon - Orange
     } else {
-      return const Color.fromARGB(255, 238, 182, 97); // Evening/Night - Purple
+      return const Color.fromARGB(255, 41, 77, 93); // Evening/Night - Purple
     }
   }
 
@@ -87,9 +87,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 20),
                 Image.asset(
-                  "assets/images/image.png",
+                  "assets/images/vibecheck.webp",
                   fit: BoxFit.cover,
-                  height: 250,
+                  height: 500,
+                  width: 500,
                 ),
                 SizedBox(height: 20),
                 Padding(
