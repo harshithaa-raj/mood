@@ -78,18 +78,21 @@ class _HomepageState extends State<Homepage> {
 
     // Call addNewMood to ensure the moodHistory is updated correctly
      // Add this line
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('moodHistory', jsonEncode(moodHistory));
+
+    
   }
 
-  void addNewMood(String mood) {
+  void addNewMood(String mood) async {
   String today = DateTime.now().toLocal().toString().split(' ')[0];
   if (!moodHistory.containsKey(today)) {
     moodHistory[today] = [];
   }
   moodHistory[today]!.add({'mood': mood, 'emoji': selectedEmoji});
   saveMoodHistory();
+
+
 }
 
 void saveMoodHistory() async {
@@ -97,13 +100,15 @@ void saveMoodHistory() async {
   await prefs.setString('moodHistory', jsonEncode(moodHistory));
 }
 
-void navigateToMoodHistory() {
+void navigateToMoodHistory() async{
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => MoodHistoryPage(moodHistory: moodHistory), // Pass the updated moodHistory
     ),
   );
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('moodHistory', jsonEncode(moodHistory));
 }
 
 

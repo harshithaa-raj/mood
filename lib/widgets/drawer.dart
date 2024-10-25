@@ -47,6 +47,14 @@ class DrawerPage extends StatelessWidget {
               Navigator.pushNamed(context,'/'); // Close the drawer and handle logout
             },
           ),
+          ListTile(
+            leading:Icon(Icons.settings),
+            title:Text('Setting'),
+            onTap: (){
+              Navigator.pushNamed(context,"/Settingspage");
+            },
+
+          )
         ],
       ),
     );

@@ -5,12 +5,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
 
-
-
-
-
-
-
 class MoodHistoryPage extends StatefulWidget {
   final Map<String, List<Map<String, String>>> moodHistory;
 
@@ -50,9 +44,9 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
     }
   }
 
-  Future<void> saveMoodHistory(Map<String, List<Map<String, String>>> moodHistory) async {
+  Future<void> saveMoodHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String moodHistoryString = jsonEncode(moodHistory);
+    String moodHistoryString = jsonEncode(widget.moodHistory);
     await prefs.setString('moodHistory', moodHistoryString);
   }
 
@@ -61,7 +55,7 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
     widget.moodHistory.putIfAbsent(currentDate, () => []);
     widget.moodHistory[currentDate]!.add({'mood': mood});
 
-    saveMoodHistory(widget.moodHistory);
+    saveMoodHistory();
 
     setState(() {
       savedMoods.add('$mood at $currentDate');
@@ -102,17 +96,15 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
     return 'No mood recorded';
   }
 
-  @override
-  Widget build(BuildContext context) {
+  List<BarChartGroupData> getBarGroups() {
     Map<String, int> moodCounts = getMoodCounts();
-
-    List<BarChartGroupData> barGroups = moods.map((mood) {
+    return moods.map((mood) {
       return BarChartGroupData(
         x: moods.indexOf(mood),
         barRods: [
           BarChartRodData(
             toY: moodCounts[mood]?.toDouble() ?? 0,
-            color: Colors.blueAccent,
+            color: getMoodColor(mood),
             width: 20,
             borderRadius: BorderRadius.circular(10),
             backDrawRodData: BackgroundBarChartRodData(
@@ -124,7 +116,28 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
         ],
       );
     }).toList();
+  }
 
+  Color getMoodColor(String mood) {
+    switch (mood) {
+      case 'Angry':
+        return Colors.red;
+      case 'Sad':
+        return Colors.blue;
+      case 'Neutral':
+        return Colors.grey;
+      case 'Happy':
+        return Colors.green;
+      case 'Calm':
+        return Colors.purple;
+      default:
+        return Colors.black;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<BarChartGroupData> barGroups = getBarGroups();
     String motivation = getMotivationMessage(dominantMood);
 
     return Scaffold(
@@ -211,7 +224,6 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
                 ),
               ),
             ),
-            // Show calendar only if toggle is true
             if (showCalendar) ...[
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -269,18 +281,18 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
 
   String getMotivationMessage(String mood) {
     switch (mood) {
-      case 'Happy':
-        return 'Keep spreading your joy and positivity!';
-      case 'Sad':
-        return 'It\'s okay to feel sad. Tomorrow is a new day!';
       case 'Angry':
-        return 'Channel your energy into something productive!';
-      case 'Calm':
-        return 'Embrace this peace; it is your strength!';
+        return 'Try to find calm in chaos.';
+      case 'Sad':
+        return 'It’s okay to feel down sometimes.';
       case 'Neutral':
-        return 'Find beauty in the simple moments.';
+        return 'Balance is key to happiness.';
+      case 'Happy':
+        return 'Keep spreading the joy!';
+      case 'Calm':
+        return 'Serenity is the ultimate goal.';
       default:
-        return 'Keep smiling!';
+        return '';
     }
   }
 }
