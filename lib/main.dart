@@ -64,6 +64,7 @@ class _MoodTrackerState extends State<MoodTracker> {
           onThemeChanged: _toggleTheme,
           isDarkMode: _isDarkMode, 
            
+          
         ), 
         },
       );

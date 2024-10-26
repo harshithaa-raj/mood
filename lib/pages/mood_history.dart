@@ -63,23 +63,6 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
     });
   }
 
-  void deleteMood(String moodEntry) {
-    String dateKey = moodEntry.split(' at ')[1];
-    String mood = moodEntry.split(' at ')[0];
-
-    // Remove the mood entry from the moodHistory
-    widget.moodHistory[dateKey]?.removeWhere((entry) => entry['mood'] == mood);
-    
-    // Save updated mood history
-    saveMoodHistory();
-
-    // Remove from savedMoods
-    setState(() {
-      savedMoods.remove(moodEntry);
-      dominantMood = getDominantMood();
-    });
-  }
-
   Map<String, int> getMoodCounts() {
     Map<String, int> moodCounts = {};
     for (var moodEntry in savedMoods) {
@@ -174,10 +157,7 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              const Color.fromARGB(255, 222, 152, 235),
-              const Color.fromARGB(255, 135, 175, 245)
-            ],
+            colors: [const Color.fromARGB(255, 222, 152, 235), const Color.fromARGB(255, 135, 175, 245)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -286,37 +266,13 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
                     color: Colors.deepPurple,
                     shape: BoxShape.circle,
                   ),
-                  defaultDecoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  weekendDecoration: BoxDecoration(
-                    color: Colors.red[200],
+                  markerDecoration: BoxDecoration(
+                    color: Colors.amber,
                     shape: BoxShape.circle,
                   ),
                 ),
               ),
             ],
-            Expanded(
-              flex: 2,
-              child: ListView.builder(
-                itemCount: savedMoods.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      savedMoods[index],
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        deleteMood(savedMoods[index]);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
           ],
         ),
       ),
@@ -326,15 +282,15 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
   String getMotivationMessage(String mood) {
     switch (mood) {
       case 'Angry':
-        return 'Take a deep breath and let it go!';
+        return 'Try to find calm in chaos.';
       case 'Sad':
-        return 'It’s okay to feel sad sometimes.';
+        return 'It’s okay to feel down sometimes.';
       case 'Neutral':
-        return 'Every day is a new beginning.';
+        return 'Balance is key to happiness.';
       case 'Happy':
-        return 'Keep smiling and spread positivity!';
+        return 'Keep spreading the joy!';
       case 'Calm':
-        return 'Stay grounded and keep your peace.';
+        return 'Serenity is the ultimate goal.';
       default:
         return '';
     }

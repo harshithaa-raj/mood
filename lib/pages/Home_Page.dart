@@ -39,6 +39,12 @@ class _HomepageState extends State<Homepage> {
   String selectedEmoji = '';
   Color selectedColor = Colors.white; // Default background color
 
+  // Add fields for additional context
+  String moodTrigger = '';
+  String sleepQuality = '';
+  String exercise = '';
+  String significantEvents = '';
+
   final List<Map<String, dynamic>> moods = [
     {'mood': 'Angry', 'emoji': '😠', 'color': Colors.pinkAccent.shade100},
     {'mood': 'Sad', 'emoji': '😢', 'color': Colors.lightBlue.shade100},
@@ -59,7 +65,7 @@ class _HomepageState extends State<Homepage> {
     return quotes[randomIndex];
   }
 
-  void recordMood(String mood, String emoji) async {
+  void recordMood(String mood, String emoji, String trigger, String sleepQuality, String exercise, String events) async {
     String today = DateTime.now().toLocal().toString().split(' ')[0]; // Get today's date
     if (!moodHistory.containsKey(today)) {
       moodHistory[today] = []; // Initialize list for today if it doesn't exist
@@ -67,6 +73,10 @@ class _HomepageState extends State<Homepage> {
     moodHistory[today]!.add({
       'mood': mood,
       'emoji': emoji,
+      'trigger': trigger,
+      'sleepQuality': sleepQuality,
+      'exercise': exercise,
+      'significantEvents': events,
     });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -86,7 +96,8 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Mood Tracker')),
+        title: Center(child: Text('Mood Tracker')
+        ),
         backgroundColor: Colors.deepPurple,
       ),
       body: Container(
@@ -117,7 +128,6 @@ class _HomepageState extends State<Homepage> {
                         selectedMood = mood['mood'];
                         selectedEmoji = mood['emoji'];
                         selectedColor = mood['color'];
-                        recordMood(selectedMood, selectedEmoji); // Record mood
                       });
                       showMoodFullScreen(context);
                     },
@@ -182,6 +192,60 @@ class _HomepageState extends State<Homepage> {
                     style: TextStyle(fontSize: 24, color: Colors.white),
                   ),
                   SizedBox(height: 20),
+                  // New input fields for additional context
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'What triggered your mood?',
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    onChanged: (value) {
+                      moodTrigger = value;
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Sleep Quality (1-10)',
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    onChanged: (value) {
+                      sleepQuality = value;
+                    },
+                    keyboardType: TextInputType.number,
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Did you exercise today?',
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    onChanged: (value) {
+                      exercise = value;
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Any significant events?',
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    onChanged: (value) {
+                      significantEvents = value;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      recordMood(selectedMood, selectedEmoji, moodTrigger, sleepQuality, exercise, significantEvents); // Record mood and context
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: Text('Record Mood'),
+                  ),
+                  SizedBox(height: 10),
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -237,11 +301,11 @@ class MoodPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     moodTp.layout();
-    moodTp.paint(canvas, Offset(size.width / 2 - moodTp.width / 2, size.height / 2 + 30));
+    moodTp.paint(canvas, Offset(size.width / 2 - moodTp.width / 2, size.height / 2 + emojiTp.height / 2 + 8));
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+    return false;
   }
 }
