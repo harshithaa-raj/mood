@@ -13,9 +13,6 @@ class Homepage extends StatefulWidget {
   _HomepageState createState() => _HomepageState();
 }
 
-
-
-
 class _HomepageState extends State<Homepage> {
   Map<String, List<Map<String, String>>> moodHistory = {};
 
@@ -28,10 +25,9 @@ class _HomepageState extends State<Homepage> {
   Future<void> loadMoodHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? moodHistoryString = prefs.getString('moodHistory');
-    
+
     if (moodHistoryString != null) {
       setState(() {
-        // Decode the saved JSON string and cast it into the proper type
         moodHistory = (jsonDecode(moodHistoryString) as Map<String, dynamic>).map((key, value) {
           return MapEntry(key, List<Map<String, String>>.from(value));
         });
@@ -39,13 +35,10 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-
-
-
   String selectedMood = '';
   String selectedEmoji = '';
   Color selectedColor = Colors.white; // Default background color
-  
+
   final List<Map<String, dynamic>> moods = [
     {'mood': 'Angry', 'emoji': '😠', 'color': Colors.pinkAccent.shade100},
     {'mood': 'Sad', 'emoji': '😢', 'color': Colors.lightBlue.shade100},
@@ -76,42 +69,18 @@ class _HomepageState extends State<Homepage> {
       'emoji': emoji,
     });
 
-    // Call addNewMood to ensure the moodHistory is updated correctly
-     // Add this line
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('moodHistory', jsonEncode(moodHistory));
-
-    
   }
 
-  void addNewMood(String mood) async {
-  String today = DateTime.now().toLocal().toString().split(' ')[0];
-  if (!moodHistory.containsKey(today)) {
-    moodHistory[today] = [];
+  void navigateToMoodHistory() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MoodHistoryPage(moodHistory: moodHistory),
+      ),
+    );
   }
-  moodHistory[today]!.add({'mood': mood, 'emoji': selectedEmoji});
-  saveMoodHistory();
-
-
-}
-
-void saveMoodHistory() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('moodHistory', jsonEncode(moodHistory));
-}
-
-void navigateToMoodHistory() async{
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => MoodHistoryPage(moodHistory: moodHistory), // Pass the updated moodHistory
-    ),
-  );
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('moodHistory', jsonEncode(moodHistory));
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -170,19 +139,10 @@ void navigateToMoodHistory() async{
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Navigate to MoodHistory page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MoodHistoryPage(moodHistory: moodHistory), // Ensure the type matches here
-                    ),
-                  );
-                },
+                onPressed: navigateToMoodHistory,
                 child: Text('View Mood History'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  disabledBackgroundColor: Colors.deepPurple,
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),

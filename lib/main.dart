@@ -5,8 +5,8 @@ import 'package:flutter_mood/pages/mood_history.dart';
 import 'package:flutter_mood/pages/note_page.dart';
 import 'package:flutter_mood/pages/setting_page.dart';
 import 'package:flutter_mood/utils/routes.dart';
-
-void main(){
+void main() {
+   
   runApp(MoodTracker());
 }
 
@@ -18,13 +18,26 @@ class MoodTracker extends StatefulWidget {
 
 class _MoodTrackerState extends State<MoodTracker> {
   
-  bool _isDarkMode = false;  // Define _isDarkMode here
+  bool _isDarkMode = false;
+  bool _isLoggedIn = true;  // Define _isDarkMode here
   Map<String, List<Map<String, String>>> moodHistory = {};
 
 
   void _toggleTheme(bool isDarkMode) {
     setState(() {
       _isDarkMode = isDarkMode;
+    });
+  }
+
+  void _logout() {
+    setState(() {
+      _isLoggedIn = false; // Update login state to false
+    });
+  }
+
+  void _login() {
+    setState(() {
+      _isLoggedIn = true; // Update login state to true
     });
   }
   
@@ -39,7 +52,8 @@ class _MoodTrackerState extends State<MoodTracker> {
         brightness:Brightness.dark,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: MyRoutes.homeRoute,
+  
+      initialRoute: _isLoggedIn ? MyRoutes.homeRoute : MyRoutes.loginRoute,
       routes: {
         "/":(context)=>LoginPage(),
         MyRoutes.homeRoute:(context)=> Homepage(),
@@ -49,6 +63,7 @@ class _MoodTrackerState extends State<MoodTracker> {
         MyRoutes.SettingsPage:(context)=>SettingsPage(
           onThemeChanged: _toggleTheme,
           isDarkMode: _isDarkMode, 
+           
         ), 
         },
       );
