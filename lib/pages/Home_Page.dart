@@ -19,7 +19,7 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    loadMoodHistory(); // Load the mood history when the app starts
+    loadMoodHistory(); 
   }
 
   Future<void> loadMoodHistory() async {
@@ -37,9 +37,9 @@ class _HomepageState extends State<Homepage> {
 
   String selectedMood = '';
   String selectedEmoji = '';
-  Color selectedColor = Colors.white; // Default background color
+  Color selectedColor = Colors.white; 
 
-  // Add fields for additional context
+  
   String moodTrigger = '';
   String sleepQuality = '';
   String exercise = '';
@@ -66,9 +66,9 @@ class _HomepageState extends State<Homepage> {
   }
 
   void recordMood(String mood, String emoji, String trigger, String sleepQuality, String exercise, String events) async {
-    String today = DateTime.now().toLocal().toString().split(' ')[0]; // Get today's date
+    String today = DateTime.now().toLocal().toString().split(' ')[0]; 
     if (!moodHistory.containsKey(today)) {
-      moodHistory[today] = []; // Initialize list for today if it doesn't exist
+      moodHistory[today] = []; 
     }
     moodHistory[today]!.add({
       'mood': mood,
@@ -137,9 +137,9 @@ class _HomepageState extends State<Homepage> {
                           size: Size(120, 120),
                           painter: MoodPainter(mood: mood),
                         ),
-                        SizedBox(height: 8), // Space between emoji and name
+                        SizedBox(height: 8), 
                         Text(
-                          mood['name'], // Display the name of the mood below the emoji
+                          mood['name'], 
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ],
@@ -168,7 +168,7 @@ class _HomepageState extends State<Homepage> {
               ),
               SizedBox(height: 20),
               Text(
-                'Stay positive and keep track of your feelings!', // Footer message
+                'Stay positive and keep track of your feelings!', 
                 style: TextStyle(fontSize: 14, color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -191,10 +191,10 @@ class _HomepageState extends State<Homepage> {
           ),
           child: Container(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.8, // Limit the height to 80% of the screen
+              maxHeight: MediaQuery.of(context).size.height * 0.8, 
             ),
             padding: EdgeInsets.all(24),
-            child: SingleChildScrollView( // Make it scrollable
+            child: SingleChildScrollView( 
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -247,7 +247,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  // New helper method for building text fields
+  
   Widget _buildTextField(String hint, Function(String) onChanged, {TextInputType keyboardType = TextInputType.text}) {
     return TextField(
       decoration: InputDecoration(
@@ -264,15 +264,15 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  // Validation method for input fields
+  
   bool _validateInputs() {
     if (moodTrigger.isEmpty || sleepQuality.isEmpty || exercise.isEmpty || significantEvents.isEmpty) {
-      return false; // Return false if any field is empty
+      return false; 
     }
     return true;
   }
 
-  // Show confirmation dialog
+  
   void _showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -283,15 +283,15 @@ class _HomepageState extends State<Homepage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop(); 
                 recordMood(selectedMood, selectedEmoji, moodTrigger, sleepQuality, exercise, significantEvents);
-                Navigator.of(context).pop(); // Close the dialog after recording
+                Navigator.of(context).pop(); 
               },
               child: Text('Yes'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop(); 
               },
               child: Text('No'),
             ),
@@ -301,7 +301,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  // Show error dialog for validation failure
+  
   void _showErrorDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -312,7 +312,7 @@ class _HomepageState extends State<Homepage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop(); 
               },
               child: Text('OK'),
             ),
@@ -330,14 +330,14 @@ class MoodPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Drawing the background circle
+    
     Paint paint = Paint()
       ..color = mood['color']
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(size.center(Offset.zero), size.width / 2, paint);
 
-    // Drawing the emoji
+    
     TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: mood['emoji'],

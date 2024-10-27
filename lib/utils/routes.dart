@@ -7,10 +7,6 @@ class MyRoutes{
   static String NotesPage="/notepage";
   static String DrawerPage="/drawerpage";
   static String SettingsPage="/Settingspage";
-  static String EditProfilePage="/EditProfilePage";
-  
-  
-
-  
+  static String EditProfilePage="/EditProfilePage"; 
   
 }

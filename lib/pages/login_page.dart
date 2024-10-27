@@ -11,7 +11,7 @@ class _LoginPageState extends State<LoginPage> {
   bool changeButton = false;
   final _formKey = GlobalKey<FormState>();
 
-  // Function to determine greeting based on time of day
+  
   String getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
@@ -23,15 +23,15 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // Function to get background color based on time of day
+  
   Color getBackgroundColor() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return const Color.fromARGB(181, 222, 199, 115); // Morning - Light Blue
+      return const Color.fromARGB(181, 222, 199, 115); 
     } else if (hour < 17) {
-      return const Color.fromARGB(255, 234, 123, 68); // Afternoon - Orange
+      return const Color.fromARGB(255, 234, 123, 68); 
     } else {
-      return const Color.fromARGB(255, 41, 77, 93); // Evening/Night - Purple
+      return const Color.fromARGB(255, 41, 77, 93); 
     }
   }
 
@@ -70,15 +70,15 @@ class _LoginPageState extends State<LoginPage> {
                   flex: 1,
                   child: Image.asset(
                     "assets/images/WhatsApp Image 2024-10-27 at 18.09.40_af277417.jpg",
-                    fit: BoxFit.cover, // Ensure the image covers the container
+                    fit: BoxFit.cover, 
                   ),
                 ),
-                // Right half with greeting and form
+                
                 Expanded(
                   flex: 1,
                   child: SingleChildScrollView(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           getGreeting(),
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         Form(
                           key: _formKey,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch, // Use stretch to utilize full width
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               _buildUsernameField(),
                               SizedBox(height: 10),

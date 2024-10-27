@@ -19,7 +19,7 @@ class _NotesPageState extends State<NotesPage> {
     calculateStreak();
   }
 
-  // Load notes and mood date
+  
   Future<void> loadNotes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? savedNotes = prefs.getStringList('notes');
@@ -74,7 +74,7 @@ class _NotesPageState extends State<NotesPage> {
 
   void addNote() {
     String noteContent = '';
-    String linkedMood = 'Happy'; // Default mood
+    String linkedMood = 'Happy'; 
 
     showDialog(
       context: context,
@@ -88,7 +88,7 @@ class _NotesPageState extends State<NotesPage> {
                 children: [
                   TextField(
                     onChanged: (value) {
-                      noteContent = value; // Capture the input
+                      noteContent = value; 
                     },
                     decoration: InputDecoration(labelText: 'Note'),
                   ),
@@ -235,39 +235,39 @@ class _NotesPageState extends State<NotesPage> {
               leading: Icon(Icons.home),
               title: Text('Home'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.pushNamed(context, "/home"); // Navigate to Home
+                Navigator.pop(context); 
+                Navigator.pushNamed(context, "/home"); 
               },
             ),
             ListTile(
               leading: Icon(Icons.note),
               title: Text('Notes'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.pushNamed(context, "/notepage"); // Navigate to Notes page
+                Navigator.pop(context); 
+                Navigator.pushNamed(context, "/notepage"); 
               },
             ),
             ListTile(
               leading: Icon(Icons.bar_chart),
               title: Text('Stats'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.pushNamed(context, "/moodhistory"); // Navigate to Stats page
+                Navigator.pop(context); 
+                Navigator.pushNamed(context, "/moodhistory"); 
               },
             ),
             ListTile(
               leading: Icon(Icons.login),
               title: Text('Login'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.pushNamed(context, '/'); // Handle logout
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/'); 
               },
             ),
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
+                Navigator.pop(context); 
                 Navigator.pushNamed(context, "/Settingspage");
               },
             ),

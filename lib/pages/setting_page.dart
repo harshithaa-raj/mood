@@ -25,18 +25,18 @@ class _MoodTrackerState extends State<MoodTracker> {
   Widget build(BuildContext context) {
     return MaterialApp(
       
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light, // Use dark or light theme based on toggle
+      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light, 
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
-        brightness: Brightness.light, // Light theme
+        brightness: Brightness.light, 
       ),
       darkTheme: ThemeData(
-        brightness: Brightness.dark, // Dark theme
+        brightness: Brightness.dark, 
       ),
       debugShowCheckedModeBanner: false,
       home: _isLoggedIn ? Homepage() : LoginPage(),
 
-      // Routes for navigation to other pages like Settings
+      
       routes: {
         '/settings': (context) => SettingsPage(
           onThemeChanged: (bool isDark) {
@@ -76,18 +76,18 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         padding: EdgeInsets.all(16.0),
         children: <Widget>[
-          // Dark Mode Toggle
+          
           SwitchListTile(
             title: Text("Dark Mode"),
             subtitle: Text("Toggle between light and dark theme"),
-            value: widget.isDarkMode, // Use the current theme state
+            value: widget.isDarkMode, 
             onChanged: (value) {
-              widget.onThemeChanged(value); // Notify parent widget to change theme
+              widget.onThemeChanged(value); 
             },
           ),
           Divider(),
 
-          // Notifications Toggle
+          
           SwitchListTile(
             title: Text("Notifications"),
             subtitle: Text("Enable or disable notifications"),
@@ -102,7 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
           
 
-          // Account Management
+          
           ListTile(
             title: Text("Manage Account"),
             subtitle: Text("Edit profile or log out"),
@@ -112,7 +112,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           Divider(),
 
-          // Privacy Policy and Terms
+          
           ListTile(
             title: Text("Privacy Policy"),
             onTap: () {
@@ -127,14 +127,14 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           Divider(),
 
-          // App Information
+          
           ListTile(
             title: Text("App Version"),
             subtitle: Text("1.0.0"),
           ),
           ListTile(
             title: Text("About"),
-            subtitle: Text("Developed by [Your Name]"),
+            subtitle: Text("Developed by Vijyusha"),
           ),
         ],
       ),
@@ -154,7 +154,7 @@ void _showManageAccountDialog() {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog first
+              Navigator.of(context).pop(); 
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => EditProfilePage()),
@@ -164,8 +164,8 @@ void _showManageAccountDialog() {
           ),
           TextButton(
             onPressed: () {
-              _logout(); // Call logout function
-              Navigator.of(context).pop(); // Close the dialog
+              _logout(); 
+              Navigator.of(context).pop();
             },
             child: Text("Log Out"),
           ),
@@ -178,24 +178,21 @@ void _showManageAccountDialog() {
 
 
 void _logout() async {
-  // Clear any saved user session data (like tokens or preferences)
+  
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.clear(); // Clear all stored data
+  await prefs.clear(); 
 
-  // Optionally set flags or variables to indicate that the user has logged out
+  
   setState(() {
-    // For example, you can use a boolean flag to track the user's login status
-    // _isLoggedIn is an example flag you might define earlier in your app's state
-    _isLoggedIn = false; // This flag will indicate the user is logged out
+    
+    _isLoggedIn = false;
   });
 
-  // Navigate to the LoginPage and remove all previous routes from the stack
+  
   Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (context) => LoginPage()), // Ensure LoginPage is correct
-    (Route<dynamic> route) => false, // This removes all previous routes
-  );
+    MaterialPageRoute(builder: (context) => LoginPage()), 
+    (Route<dynamic> route) => false, );
 
-  // Optional: Provide feedback to the user that they've logged out successfully
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text('Logged out successfully')),
   );
@@ -211,7 +208,7 @@ void _logout() async {
         title: Text("Privacy Policy"),
         content: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min, // Make the dialog only as tall as its content
+            mainAxisSize: MainAxisSize.min, 
             children: [
               Text(
                 "Privacy Policy for MoodTracker\n\n"
@@ -251,10 +248,10 @@ void _logout() async {
                 "We may update this Privacy Policy from time to time. When changes are made, we will notify users within the app or via email. Please review this policy periodically for any updates.\n\n"
                 "9. Contact Us:\n"
                 "If you have any questions or concerns about this Privacy Policy or your data, please contact us at:\n"
-                "Email: [your.email@example.com]\n"
-                "Phone: [your contact number]\n\n"
+                "Email: [xxxx.email@example.com]\n"
+                "Phone:[63048xxxxx]]\n\n"
                 "By using MoodTracker, you consent to this Privacy Policy.",
-                textAlign: TextAlign.left, // Align text to the left
+                textAlign: TextAlign.left, 
               ),
             ],
           ),
@@ -318,8 +315,8 @@ These Terms of Service are governed by and construed in accordance with the laws
 
 11. Contact Information:
 If you have any questions or concerns about these Terms of Service, please contact us at:
-Email: [your.email@example.com]
-Phone: [your contact number]
+Email: [xxxx.email@example.com]
+Phone: [63048xxxxx]
               ''',
             ),
           ),

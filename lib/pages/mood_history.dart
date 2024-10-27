@@ -19,7 +19,7 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
   List<String> savedMoods = [];
   String dominantMood = 'Neutral';
   DateTime selectedDate = DateTime.now();
-  bool showCalendar = false; // Toggle calendar visibility
+  bool showCalendar = false; 
 
   @override
   void initState() {
@@ -149,7 +149,7 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
             icon: Icon(Icons.calendar_today),
             onPressed: () {
               setState(() {
-                showCalendar = !showCalendar; // Toggle calendar visibility
+                showCalendar = !showCalendar; 
               });
             },
           ),

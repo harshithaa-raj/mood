@@ -23,28 +23,28 @@ class DrawerPage extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text('Home'),
             onTap: () {
-              Navigator.pushNamed(context, "/home"); // Navigate to Home
+              Navigator.pushNamed(context, "/home"); 
             },
           ),
           ListTile(
             leading: Icon(Icons.note),
             title: Text('Notes'),
             onTap: () {
-              Navigator.pushNamed(context, "/notepage"); // Navigate to Notes page
+              Navigator.pushNamed(context, "/notepage"); 
             },
           ),
           ListTile(
             leading: Icon(Icons.bar_chart),
             title: Text('Stats'),
             onTap: () {
-              Navigator.pushNamed(context, "/moodhistory"); // Navigate to Tree page
+              Navigator.pushNamed(context, "/moodhistory"); 
             },
           ),
           ListTile(
             leading: Icon(Icons.login),
             title: Text('Login'),
             onTap: () {
-              Navigator.pushNamed(context,'/'); // Close the drawer and handle logout
+              Navigator.pushNamed(context,'/');
             },
           ),
           ListTile(

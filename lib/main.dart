@@ -21,7 +21,7 @@ class MoodTracker extends StatefulWidget {
 class _MoodTrackerState extends State<MoodTracker> {
   
   bool _isDarkMode = false;
-  bool _isLoggedIn = true;  // Define _isDarkMode here
+  bool _isLoggedIn = true;  
   Map<String, List<Map<String, String>>> moodHistory = {};
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -34,7 +34,7 @@ class _MoodTrackerState extends State<MoodTracker> {
 
   void _initializeNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon'); // Change 'app_icon' to your app's icon file name
+        AndroidInitializationSettings('app_icon'); 
     final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
     );
@@ -50,13 +50,13 @@ class _MoodTrackerState extends State<MoodTracker> {
 
   void _logout() {
     setState(() {
-      _isLoggedIn = false; // Update login state to false
+      _isLoggedIn = false; 
     });
   }
 
   void _login() {
     setState(() {
-      _isLoggedIn = true; // Update login state to true
+      _isLoggedIn = true; 
     });
   }
   
