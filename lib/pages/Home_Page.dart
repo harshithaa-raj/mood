@@ -97,12 +97,13 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('Mood Tracker')),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: const Color.fromARGB(255, 196, 150, 227),
+        
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.deepPurple, Colors.pinkAccent],
+            colors: [const Color.fromARGB(255, 114, 182, 234), const Color.fromARGB(255, 231, 130, 191)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

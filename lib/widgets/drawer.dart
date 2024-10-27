@@ -9,7 +9,7 @@ class DrawerPage extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.deepPurple,
+              color: const Color.fromARGB(255, 196, 150, 227),
             ),
             child: Text(
               'Mood Tracker',

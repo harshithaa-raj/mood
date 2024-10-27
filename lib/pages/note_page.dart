@@ -203,7 +203,7 @@ class _NotesPageState extends State<NotesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notes'),
-        backgroundColor: const Color.fromARGB(255, 201, 82, 145),
+        backgroundColor: const Color.fromARGB(255, 196, 150, 227),
         actions: [
           IconButton(
             icon: Icon(Icons.star),
@@ -221,7 +221,7 @@ class _NotesPageState extends State<NotesPage> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.deepPurple,
+                color: const Color.fromARGB(255, 241, 128, 229),
               ),
               child: Text(
                 'Mood Tracker',
@@ -279,7 +279,7 @@ class _NotesPageState extends State<NotesPage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.pink.shade200, Colors.purple.shade800],
+            colors: [const Color.fromARGB(255, 155, 219, 242), const Color.fromARGB(255, 238, 138, 195)],
           ),
         ),
         padding: const EdgeInsets.all(16.0),

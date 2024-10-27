@@ -11,7 +11,7 @@ class _LoginPageState extends State<LoginPage> {
   bool changeButton = false;
   final _formKey = GlobalKey<FormState>();
 
-  // Function to determine greeting and background based on time of day
+  // Function to determine greeting based on time of day
   String getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
@@ -67,10 +67,10 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 // Left half with image
                 Expanded(
-                  flex: 1, // Takes half of the width
+                  flex: 1,
                   child: Image.asset(
-                    "assets/images/vibecheck.webp",
-                    fit: BoxFit.cover, // Make the image cover the entire container
+                    "assets/images/WhatsApp Image 2024-10-27 at 18.09.40_af277417.jpg",
+                    fit: BoxFit.cover, // Ensure the image covers the container
                   ),
                 ),
                 // Right half with greeting and form
@@ -78,9 +78,8 @@ class _LoginPageState extends State<LoginPage> {
                   flex: 1,
                   child: SingleChildScrollView(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center, // Center the content vertically
+                      mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
                       children: [
-                        SizedBox(height: 60), // Space for the status bar
                         Text(
                           getGreeting(),
                           style: TextStyle(
@@ -94,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         Form(
                           key: _formKey,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end, // Align items to the right
+                            crossAxisAlignment: CrossAxisAlignment.stretch, // Use stretch to utilize full width
                             children: [
                               _buildUsernameField(),
                               SizedBox(height: 10),

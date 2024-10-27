@@ -72,7 +72,7 @@ class _MoodTrackerState extends State<MoodTracker> {
       ),
       debugShowCheckedModeBanner: false,
   
-      initialRoute: _isLoggedIn ? MyRoutes.homeRoute : MyRoutes.loginRoute,
+      initialRoute: MyRoutes.loginRoute,
       routes: {
         "/":(context)=>LoginPage(),
         MyRoutes.homeRoute:(context)=> Homepage(),

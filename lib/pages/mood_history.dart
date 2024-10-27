@@ -143,6 +143,7 @@ class _MoodHistoryPageState extends State<MoodHistoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mood History'),
+        backgroundColor: const Color.fromARGB(255, 196, 150, 227),
         actions: [
           IconButton(
             icon: Icon(Icons.calendar_today),
