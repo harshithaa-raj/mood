@@ -1,16 +1,60 @@
 # flutter_mood
 
-A new Flutter project.
+# MoodTracker
+
+**MoodTracker** is a Flutter-based mobile application that enables users to effectively track and manage their moods over time. The app provides an intuitive interface for logging daily moods, viewing mood history, and personalizing user profiles. With features like dark mode and local notifications, MoodTracker ensures a user-friendly experience while promoting mental health awareness.
+
+## Table of Contents
+
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
+## Features
+
+- **User Authentication:** Secure login/logout functionality.
+- **Mood Logging:** Users can log their moods daily using predefined mood options.
+- **Mood History:** View and analyze mood trends over time through a visually appealing interface.
+- **Edit Profile:** Customize user profiles, including name, profile picture, and preferences.
+- **Dark Mode:** Switch between light and dark themes for improved usability.
+- **Local Notifications:** Set reminders to encourage regular mood logging.
+- **Responsive Design:** The app is optimized for various screen sizes and orientations.
+
+## Screenshots
+
+![Login Page](assets/images/login_page.png)
+![Home Page](assets/images/home_page.png)
+![Mood History](assets/images/mood_history.png)
+![Edit Profile Page](assets/images/edit_profile.png)
+
+## Technologies Used
+
+- **Flutter:** The UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase.
+- **Dart:** The programming language used for Flutter development.
+- **SQLite (optional):** For local data storage, if extended functionality is added in the future.
+- **Flutter Local Notifications:** To handle notifications within the app.
+- **Shared Preferences:** For storing user preferences and settings.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+Before you begin, ensure you have the following installed:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Flutter SDK](https://flutter.dev/docs/get-started/install)
+- [Dart SDK](https://dart.dev/get-dart)
+- An IDE like [Android Studio](https://developer.android.com/studio) or [Visual Studio Code](https://code.visualstudio.com/)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/flutter_mood.git
