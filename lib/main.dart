@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mood/pages/editprofile_page.dart';
 import 'package:flutter_mood/pages/home_page.dart';
 import 'package:flutter_mood/pages/login_page.dart';
 import 'package:flutter_mood/pages/mood_history.dart';
 import 'package:flutter_mood/pages/note_page.dart';
 import 'package:flutter_mood/pages/setting_page.dart';
 import 'package:flutter_mood/utils/routes.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 void main() {
    
   runApp(MoodTracker());
@@ -21,6 +23,23 @@ class _MoodTrackerState extends State<MoodTracker> {
   bool _isDarkMode = false;
   bool _isLoggedIn = true;  // Define _isDarkMode here
   Map<String, List<Map<String, String>>> moodHistory = {};
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications();
+  }
+
+  void _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon'); // Change 'app_icon' to your app's icon file name
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
 
 
   void _toggleTheme(bool isDarkMode) {
@@ -65,7 +84,8 @@ class _MoodTrackerState extends State<MoodTracker> {
           isDarkMode: _isDarkMode, 
            
           
-        ), 
+        ),
+        MyRoutes.EditProfilePage:(context)=>EditProfilePage(),
         },
       );
     

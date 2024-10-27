@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mood/pages/Home_Page.dart';
+import 'package:flutter_mood/pages/editprofile_page.dart';
 import 'package:flutter_mood/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -100,33 +101,14 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           Divider(),
 
-          // Language Selection
-          ListTile(
-            title: Text("Language"),
-            subtitle: Text("Select your preferred language"),
-            trailing: DropdownButton<String>(
-              value: _selectedLanguage,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedLanguage = newValue!;
-                });
-              },
-              items: _languages.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-          Divider(),
+          
 
           // Account Management
           ListTile(
             title: Text("Manage Account"),
             subtitle: Text("Edit profile or log out"),
             onTap: () {
-              _showAccountDialog();
+               _showManageAccountDialog();
             },
           ),
           Divider(),
@@ -160,7 +142,10 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void _showAccountDialog() {
+ 
+  
+
+void _showManageAccountDialog() {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -169,18 +154,21 @@ class _SettingsPageState extends State<SettingsPage> {
         content: Text("Would you like to edit your profile or log out?"),
         actions: <Widget>[
           TextButton(
-            child: Text("Edit Profile"),
             onPressed: () {
-              Navigator.of(context).pop();
-              // Navigate to edit profile page or dialog
+              Navigator.of(context).pop(); // Close the dialog first
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditProfilePage()),
+              );
             },
+            child: Text("Edit Profile"),
           ),
           TextButton(
-            child: Text("Log Out"),
             onPressed: () {
-              _logout(); // Call the logout method
+              _logout(); // Call logout function
               Navigator.of(context).pop(); // Close the dialog
             },
+            child: Text("Log Out"),
           ),
         ],
       );
