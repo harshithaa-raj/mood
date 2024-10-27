@@ -1,4 +1,4 @@
-# flutter_mood
+
 
 # MoodTracker
 
@@ -47,8 +47,8 @@
 - **Flutter:** The UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase.
 - **Dart:** The programming language used for Flutter development.
 - **Shared Preferences:** For storing user preferences and settings.
-- **Table Calender:**
-- **Cupertino Icons:**
+- **Table Calender:** calendar featuring monthly or weekly views
+- **Cupertino Icons:** set of sleek, minimalist icons
 
 ## Getting Started
 
