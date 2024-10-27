@@ -63,11 +63,10 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _notificationsEnabled = true;
-  String _selectedLanguage = 'English';
+ 
   bool _isLoggedIn = true;
 
-  final List<String> _languages = ['English', 'hindi' ];
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(

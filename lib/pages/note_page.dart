@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_mood/widgets/drawer.dart';
 
 class NotesPage extends StatefulWidget {
   @override
@@ -8,7 +7,7 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  List<Map<String, String>> notes = []; // Ensure the map uses String types
+  List<Map<String, String>> notes = [];
   int streakCount = 0;
   DateTime? lastMoodDate;
 
@@ -20,6 +19,7 @@ class _NotesPageState extends State<NotesPage> {
     calculateStreak();
   }
 
+  // Load notes and mood date
   Future<void> loadNotes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? savedNotes = prefs.getStringList('notes');
@@ -27,7 +27,7 @@ class _NotesPageState extends State<NotesPage> {
       notes = savedNotes.map((e) {
         final parts = e.split('::');
         return {'content': parts[0], 'linkedMood': parts[1]};
-      }).toList().cast<Map<String, String>>(); // Cast to ensure the correct type
+      }).toList();
     }
     setState(() {});
   }
@@ -116,15 +116,14 @@ class _NotesPageState extends State<NotesPage> {
                 if (noteContent.isNotEmpty) {
                   setState(() {
                     notes.add({'content': noteContent, 'linkedMood': linkedMood});
-                    print("Note added: $noteContent, Mood: $linkedMood"); // Debug statement
                   });
-                  saveNotes(); // Save notes to SharedPreferences
+                  saveNotes();
                   DateTime now = DateTime.now();
-                  saveMoodDate(now); // Save the current mood date
-                  calculateStreak(); // Update streak
-                  Navigator.of(context).pop(); // Close the dialog
+                  saveMoodDate(now);
+                  calculateStreak();
+                  Navigator.of(context).pop();
                 } else {
-                  print("Note content is empty."); // Debug statement
+                  print("Note content is empty.");
                 }
               },
               child: Text('Add'),
@@ -216,6 +215,65 @@ class _NotesPageState extends State<NotesPage> {
           ),
         ],
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.deepPurple,
+              ),
+              child: Text(
+                'Mood Tracker',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, "/home"); // Navigate to Home
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.note),
+              title: Text('Notes'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, "/notepage"); // Navigate to Notes page
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.bar_chart),
+              title: Text('Stats'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, "/moodhistory"); // Navigate to Stats page
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.login),
+              title: Text('Login'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, '/'); // Handle logout
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, "/Settingspage");
+              },
+            ),
+          ],
+        ),
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -226,6 +284,7 @@ class _NotesPageState extends State<NotesPage> {
         ),
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Current Streak: $streakCount days',
@@ -235,82 +294,60 @@ class _NotesPageState extends State<NotesPage> {
                 color: Colors.white,
               ),
             ),
+            SizedBox(height: 10),
             ElevatedButton(
               onPressed: addNote,
               child: Text('Add Note'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink[50], // Button color
+                backgroundColor: Colors.pink[50],
               ),
             ),
+            SizedBox(height: 10),
             Expanded(
-              child: ListView.builder(
-                itemCount: notes.length,
-                itemBuilder: (context, index) {
-                  Color moodColor;
-                  switch (notes[index]['linkedMood']) {
-                    case 'Angry':
-                      moodColor = Colors.red.shade200;
-                      break;
-                    case 'Sad':
-                      moodColor = Colors.blue.shade200;
-                      break;
-                    case 'Neutral':
-                      moodColor = Colors.grey.shade400;
-                      break;
-                    case 'Happy':
-                      moodColor = Colors.yellow.shade200;
-                      break;
-                    case 'Calm':
-                      moodColor = Colors.green.shade200;
-                      break;
-                    default:
-                      moodColor = Colors.white;
-                  }
-                  return Card(
-                    elevation: 4.0,
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    color: moodColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.note,
-                        color: Colors.black87,
-                      ),
-                      title: Text(
-                        notes[index]['content']!,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        'Mood: ${notes[index]['linkedMood']}',
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
+              child: notes.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () => editNote(index),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () => deleteNote(index),
+                          Icon(Icons.note, size: 50, color: Colors.white),
+                          SizedBox(height: 10),
+                          Text(
+                            'No notes yet! Tap the button to add some.',
+                            style: TextStyle(color: Colors.white),
                           ),
                         ],
                       ),
-                      onTap: () => editNote(index),
+                    )
+                  : ListView.builder(
+                      itemCount: notes.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          color: Colors.pink[50],
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          child: ListTile(
+                            title: Text(notes[index]['content']!),
+                            subtitle: Text('Mood: ${notes[index]['linkedMood']}'),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () => editNote(index),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () => deleteNote(index),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),
       ),
-      drawer: DrawerPage(),
     );
   }
 }
