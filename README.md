@@ -29,13 +29,18 @@
 
 ## Screenshots
 
-![Login Page]![Screenshot 2024-10-27 185813](https://github.com/user-attachments/assets/27d59564-3341-4c3b-b1f7-d6dd4a519e69)
+[Login Page]![Screenshot 2024-10-27 185813](https://github.com/user-attachments/assets/27d59564-3341-4c3b-b1f7-d6dd4a519e69)
 
-![Home Page]![Screenshot 2024-10-27 190628](https://github.com/user-attachments/assets/a7a1757e-3952-4fa1-a699-e725fedf15b8)
+[Home Page]![Screenshot 2024-10-27 190628](https://github.com/user-attachments/assets/a7a1757e-3952-4fa1-a699-e725fedf15b8)
+      ![Screenshot 2024-10-27 192221](https://github.com/user-attachments/assets/b320bbe5-e606-468b-ae69-1d6ba849313e)
 
-![Notes page]![Screenshot 2024-10-27 190820](https://github.com/user-attachments/assets/03a43184-e98d-46e0-b967-bcc262b9acd8)
 
-![Mood History]![Screenshot 2024-10-27 190736](https://github.com/user-attachments/assets/abf9a6a3-1287-4eef-9fe6-f1185486465c)
+[Notes page]![Screenshot 2024-10-27 190820](https://github.com/user-attachments/assets/03a43184-e98d-46e0-b967-bcc262b9acd8)
+
+[Mood History]![Screenshot 2024-10-27 190736](https://github.com/user-attachments/assets/abf9a6a3-1287-4eef-9fe6-f1185486465c)
+
+[setting page]![Screenshot 2024-10-27 192012](https://github.com/user-attachments/assets/9f102253-3d91-44eb-b486-28fc1217335e)
+
 
 
 ## Technologies Used
