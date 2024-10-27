@@ -30,7 +30,8 @@
 
 ## Screenshots
 
-![Login Page](assets/images/login_page.png)
+![Login Page]![Screenshot 2024-10-27 185813](https://github.com/user-attachments/assets/27d59564-3341-4c3b-b1f7-d6dd4a519e69)
+
 ![Home Page](assets/images/home_page.png)
 ![Mood History](assets/images/mood_history.png)
 ![Edit Profile Page](assets/images/edit_profile.png)
