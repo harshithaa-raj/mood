@@ -96,8 +96,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Mood Tracker')
-        ),
+        title: Center(child: Text('Mood Tracker')),
         backgroundColor: Colors.deepPurple,
       ),
       body: Container(
@@ -166,18 +165,20 @@ class _HomepageState extends State<Homepage> {
   }
 
   void showMoodFullScreen(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: selectedColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: selectedColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.8, // Limit the height to 80% of the screen
           ),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            padding: EdgeInsets.all(24),
+          padding: EdgeInsets.all(24),
+          child: SingleChildScrollView( // Make it scrollable
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -192,56 +193,21 @@ class _HomepageState extends State<Homepage> {
                     style: TextStyle(fontSize: 24, color: Colors.white),
                   ),
                   SizedBox(height: 20),
-                  // New input fields for additional context
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'What triggered your mood?',
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    onChanged: (value) {
-                      moodTrigger = value;
-                    },
-                  ),
+                  _buildTextField('What triggered your mood?', (value) => moodTrigger = value),
                   SizedBox(height: 10),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Sleep Quality (1-10)',
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    onChanged: (value) {
-                      sleepQuality = value;
-                    },
-                    keyboardType: TextInputType.number,
-                  ),
+                  _buildTextField('Sleep Quality (1-10)', (value) => sleepQuality = value, keyboardType: TextInputType.number),
                   SizedBox(height: 10),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Did you exercise today?',
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    onChanged: (value) {
-                      exercise = value;
-                    },
-                  ),
+                  _buildTextField('Did you exercise today?', (value) => exercise = value),
                   SizedBox(height: 10),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Any significant events?',
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    onChanged: (value) {
-                      significantEvents = value;
-                    },
-                  ),
+                  _buildTextField('Any significant events?', (value) => significantEvents = value),
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      recordMood(selectedMood, selectedEmoji, moodTrigger, sleepQuality, exercise, significantEvents); // Record mood and context
-                      Navigator.of(context).pop(); // Close the dialog
+                      if (_validateInputs()) {
+                        _showConfirmationDialog(context);
+                      } else {
+                        _showErrorDialog(context);
+                      }
                     },
                     child: Text('Record Mood'),
                   ),
@@ -259,6 +225,87 @@ class _HomepageState extends State<Homepage> {
               ),
             ),
           ),
+        ),
+      );
+    },
+  );
+}
+
+
+  // New helper method for building text fields
+  Widget _buildTextField(String hint, Function(String) onChanged, {TextInputType keyboardType = TextInputType.text}) {
+    return TextField(
+      decoration: InputDecoration(
+        hintText: hint,
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      onChanged: onChanged,
+      keyboardType: keyboardType,
+    );
+  }
+
+  // Validation method for input fields
+  bool _validateInputs() {
+    if (moodTrigger.isEmpty || sleepQuality.isEmpty || exercise.isEmpty || significantEvents.isEmpty) {
+      return false; // Ensure all fields are filled
+    }
+    int? sleepQualityValue = int.tryParse(sleepQuality);
+    if (sleepQualityValue == null || sleepQualityValue < 1 || sleepQualityValue > 10) {
+      return false; // Ensure sleep quality is between 1 and 10
+    }
+    return true; // All validations passed
+  }
+
+  // Show confirmation dialog before saving
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Mood Recording'),
+          content: Text('Are you sure you want to record this mood?'),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                recordMood(selectedMood, selectedEmoji, moodTrigger, sleepQuality, exercise, significantEvents);
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close mood dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Show error dialog for input validation
+  void _showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Please fill in all fields correctly.'),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
       },
     );
@@ -268,44 +315,38 @@ class _HomepageState extends State<Homepage> {
 class MoodPainter extends CustomPainter {
   final Map<String, dynamic> mood;
 
-  MoodPainter({required this.mood}) : super();
+  MoodPainter({required this.mood});
 
   @override
   void paint(Canvas canvas, Size size) {
-    double radius = 60;
-    Paint circlePaint = Paint()
+    // Use a Paint object to set styles
+    final paint = Paint()
       ..color = mood['color']
       ..style = PaintingStyle.fill;
 
-    canvas.drawCircle(Offset(size.width / 2, size.height / 2), radius, circlePaint);
+    // Example of drawing a circle
+    canvas.drawCircle(Offset(size.width / 2, size.height / 2), 50, paint);
 
-    TextSpan emojiSpan = TextSpan(
-      style: TextStyle(fontSize: 30, color: Colors.black),
-      text: mood['emoji'],
-    );
-    TextPainter emojiTp = TextPainter(
-      text: emojiSpan,
-      textAlign: TextAlign.center,
+    // Drawing the emoji as text
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: mood['emoji'],
+        style: TextStyle(fontSize: 60, color: Colors.black),
+      ),
       textDirection: TextDirection.ltr,
     );
-    emojiTp.layout();
-    emojiTp.paint(canvas, Offset(size.width / 2 - emojiTp.width / 2, size.height / 2 - emojiTp.height / 2));
 
-    TextSpan moodSpan = TextSpan(
-      style: TextStyle(fontSize: 18, color: Colors.black),
-      text: mood['mood'],
-    );
-    TextPainter moodTp = TextPainter(
-      text: moodSpan,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-    moodTp.layout();
-    moodTp.paint(canvas, Offset(size.width / 2 - moodTp.width / 2, size.height / 2 + emojiTp.height / 2 + 8));
+    // Layout the text
+    textPainter.layout();
+    
+    // Calculate the position to center the text
+    double textX = (size.width - textPainter.width) / 2;
+    double textY = (size.height - textPainter.height) / 2;
+
+    // Draw the text
+    textPainter.paint(canvas, Offset(textX, textY));
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
