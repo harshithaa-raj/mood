@@ -46,11 +46,11 @@ class _HomepageState extends State<Homepage> {
   String significantEvents = '';
 
   final List<Map<String, dynamic>> moods = [
-    {'mood': 'Angry', 'emoji': '😠', 'color': Colors.pinkAccent.shade100},
-    {'mood': 'Sad', 'emoji': '😢', 'color': Colors.lightBlue.shade100},
-    {'mood': 'Neutral', 'emoji': '😐', 'color': Colors.purple.shade100},
-    {'mood': 'Happy', 'emoji': '😊', 'color': Colors.yellow.shade300},
-    {'mood': 'Calm', 'emoji': '😌', 'color': Colors.greenAccent.shade100},
+    {'mood': 'Angry', 'emoji': '😠', 'color': Colors.pinkAccent.shade100, 'name': 'Angry'},
+    {'mood': 'Sad', 'emoji': '😢', 'color': Colors.lightBlue.shade100, 'name': 'Sad'},
+    {'mood': 'Neutral', 'emoji': '😐', 'color': Colors.purple.shade100, 'name': 'Neutral'},
+    {'mood': 'Happy', 'emoji': '😊', 'color': Colors.yellow.shade300, 'name': 'Happy'},
+    {'mood': 'Calm', 'emoji': '😌', 'color': Colors.greenAccent.shade100, 'name': 'Calm'},
   ];
 
   // Add a list of quotes
@@ -130,9 +130,18 @@ class _HomepageState extends State<Homepage> {
                       });
                       showMoodFullScreen(context);
                     },
-                    child: CustomPaint(
-                      size: Size(120, 120),
-                      painter: MoodPainter(mood: mood),
+                    child: Column(
+                      children: [
+                        CustomPaint(
+                          size: Size(120, 120),
+                          painter: MoodPainter(mood: mood),
+                        ),
+                        SizedBox(height: 8), // Space between emoji and name
+                        Text(
+                          mood['name'], // Display the name of the mood below the emoji
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ],
                     ),
                   );
                 }).toList(),
@@ -156,6 +165,12 @@ class _HomepageState extends State<Homepage> {
                   textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
+              SizedBox(height: 20),
+              Text(
+                'Stay positive and keep track of your feelings!', // Footer message
+                style: TextStyle(fontSize: 14, color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),
@@ -165,72 +180,71 @@ class _HomepageState extends State<Homepage> {
   }
 
   void showMoodFullScreen(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: selectedColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8, // Limit the height to 80% of the screen
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: selectedColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
           ),
-          padding: EdgeInsets.all(24),
-          child: SingleChildScrollView( // Make it scrollable
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    selectedEmoji,
-                    style: TextStyle(fontSize: 150),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'I am feeling $selectedMood',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
-                  ),
-                  SizedBox(height: 20),
-                  _buildTextField('What triggered your mood?', (value) => moodTrigger = value),
-                  SizedBox(height: 10),
-                  _buildTextField('Sleep Quality (1-10)', (value) => sleepQuality = value, keyboardType: TextInputType.number),
-                  SizedBox(height: 10),
-                  _buildTextField('Did you exercise today?', (value) => exercise = value),
-                  SizedBox(height: 10),
-                  _buildTextField('Any significant events?', (value) => significantEvents = value),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_validateInputs()) {
-                        _showConfirmationDialog(context);
-                      } else {
-                        _showErrorDialog(context);
-                      }
-                    },
-                    child: Text('Record Mood'),
-                  ),
-                  SizedBox(height: 10),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'Close',
-                      style: TextStyle(color: Colors.white),
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.8, // Limit the height to 80% of the screen
+            ),
+            padding: EdgeInsets.all(24),
+            child: SingleChildScrollView( // Make it scrollable
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      selectedEmoji,
+                      style: TextStyle(fontSize: 150),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 20),
+                    Text(
+                      'I am feeling $selectedMood',
+                      style: TextStyle(fontSize: 24, color: Colors.white),
+                    ),
+                    SizedBox(height: 20),
+                    _buildTextField('What triggered your mood?', (value) => moodTrigger = value),
+                    SizedBox(height: 10),
+                    _buildTextField('Sleep Quality (1-10)', (value) => sleepQuality = value, keyboardType: TextInputType.number),
+                    SizedBox(height: 10),
+                    _buildTextField('Did you exercise today?', (value) => exercise = value),
+                    SizedBox(height: 10),
+                    _buildTextField('Any significant events?', (value) => significantEvents = value),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_validateInputs()) {
+                          _showConfirmationDialog(context);
+                        } else {
+                          _showErrorDialog(context);
+                        }
+                      },
+                      child: Text('Record Mood'),
+                    ),
+                    SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Close',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 
   // New helper method for building text fields
   Widget _buildTextField(String hint, Function(String) onChanged, {TextInputType keyboardType = TextInputType.text}) {
@@ -252,37 +266,33 @@ class _HomepageState extends State<Homepage> {
   // Validation method for input fields
   bool _validateInputs() {
     if (moodTrigger.isEmpty || sleepQuality.isEmpty || exercise.isEmpty || significantEvents.isEmpty) {
-      return false; // Ensure all fields are filled
+      return false; // Return false if any field is empty
     }
-    int? sleepQualityValue = int.tryParse(sleepQuality);
-    if (sleepQualityValue == null || sleepQualityValue < 1 || sleepQualityValue > 10) {
-      return false; // Ensure sleep quality is between 1 and 10
-    }
-    return true; // All validations passed
+    return true;
   }
 
-  // Show confirmation dialog before saving
+  // Show confirmation dialog
   void _showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Mood Recording'),
+          title: Text('Confirm Mood'),
           content: Text('Are you sure you want to record this mood?'),
           actions: [
             TextButton(
-              child: Text('Cancel'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close dialog
+                recordMood(selectedMood, selectedEmoji, moodTrigger, sleepQuality, exercise, significantEvents);
+                Navigator.of(context).pop(); // Close the dialog after recording
               },
+              child: Text('Yes'),
             ),
             TextButton(
-              child: Text('Confirm'),
               onPressed: () {
-                recordMood(selectedMood, selectedEmoji, moodTrigger, sleepQuality, exercise, significantEvents);
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Close mood dialog
+                Navigator.of(context).pop(); // Close dialog
               },
+              child: Text('No'),
             ),
           ],
         );
@@ -290,20 +300,20 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  // Show error dialog for input validation
+  // Show error dialog for validation failure
   void _showErrorDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Error'),
-          content: Text('Please fill in all fields correctly.'),
+          title: Text('Input Error'),
+          content: Text('Please fill in all fields.'),
           actions: [
             TextButton(
-              child: Text('OK'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close dialog
               },
+              child: Text('OK'),
             ),
           ],
         );
@@ -319,34 +329,31 @@ class MoodPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Use a Paint object to set styles
-    final paint = Paint()
+    // Drawing the background circle
+    Paint paint = Paint()
       ..color = mood['color']
       ..style = PaintingStyle.fill;
 
-    // Example of drawing a circle
-    canvas.drawCircle(Offset(size.width / 2, size.height / 2), 50, paint);
+    canvas.drawCircle(size.center(Offset.zero), size.width / 2, paint);
 
-    // Drawing the emoji as text
-    final textPainter = TextPainter(
+    // Drawing the emoji
+    TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: mood['emoji'],
-        style: TextStyle(fontSize: 60, color: Colors.black),
+        style: TextStyle(fontSize: 72, color: Colors.black),
       ),
       textDirection: TextDirection.ltr,
     );
 
-    // Layout the text
     textPainter.layout();
-    
-    // Calculate the position to center the text
-    double textX = (size.width - textPainter.width) / 2;
-    double textY = (size.height - textPainter.height) / 2;
-
-    // Draw the text
-    textPainter.paint(canvas, Offset(textX, textY));
+    textPainter.paint(
+      canvas,
+      Offset((size.width - textPainter.width) / 2, (size.height - textPainter.height) / 2),
+    );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
 }
