@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/mood/flutter_mood/windows/flutter"
+    "cmake.sourceDirectory": "C:/mood/flutter_mood/windows/flutter",
+    "cmake.ignoreCMakeListsMissing": true
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mood/utils/routes.dart';
+import 'package:flutter_mood/pages/registration_page.dart'; // Import RegistrationPage
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,7 +12,6 @@ class _LoginPageState extends State<LoginPage> {
   bool changeButton = false;
   final _formKey = GlobalKey<FormState>();
 
-  
   String getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
@@ -23,7 +23,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  
   Color getBackgroundColor() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
@@ -100,6 +99,22 @@ class _LoginPageState extends State<LoginPage> {
                               _buildPasswordField(),
                               SizedBox(height: 20),
                               _buildLoginButton(),
+                              SizedBox(height: 20),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => RegistrationPage()), // Navigate to RegistrationPage
+                                  );
+                                },
+                                child: Text(
+                                  "Don't have an account? Register here",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
